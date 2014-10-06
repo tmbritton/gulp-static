@@ -1,4 +1,8 @@
+
 {{> partials/header}}
-<p>Helloasasd {{firstName}}</p>
-<p>HELLO! {{capitals firstName}}</p>
-{{> footer}}
+<!-- Add your site or application content here -->
+<p>Hello world! This is HTML5 Boilerplate.</p>
+
+<p>Hello {{en.name}}</p>
+<p>HELLO! {{capitals en.name}}</p>
+{{> partials/footer}}

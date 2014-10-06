@@ -6,6 +6,8 @@ var configs = require('./configs.js'),
   rename = require('gulp-rename'),
   connect = require('gulp-connect'),
   livereload = require('gulp-livereload'),
+  marked = require('gulp-marked'),
+  frontmatter = require('gulp-front-matter'),
   lr = require('tiny-lr'),
   path = require("path"),
   server = lr();
@@ -19,21 +21,12 @@ gulp.task('connect', function(){
 });
 
 gulp.task('handlebars', function () {
-  var templateData = {
-      firstName: 'Tom'
-  },
-  options = {
-    ignorePartials: true, //ignores the unknown footer2 partial in the handlebars template, defaults to false
-    partials : {
-      footer : '<footer>the end</footer>'
-    },
-    batch : ['./dev/templates/partials'],
-    helpers : {
-      capitals : function(str){
-        return str.toUpperCase();
-      }
-    }
-  }  
+  var templateData = configs.site,
+      options = {
+        ignorePartials: true,
+        batch : ['./dev/templates/partials'],
+        helpers : require('./helpers.js')
+      };
   return gulp.src('./dev/templates/index.hbr')
     .pipe(handlebars(templateData, options))
     .pipe(rename('index.html'))

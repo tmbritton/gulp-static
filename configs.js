@@ -1,8 +1,8 @@
-var configs = {
+module.exports = {
 	'site': {
-			'en': {
-				'name': 'Site Title in English',
-				'subhead': 'Site subtitle in English'
+		'en': {
+			'name': 'Site Title in English',
+			'subhead': 'Site subtitle in English'
 		}
 	},
   'application': {
