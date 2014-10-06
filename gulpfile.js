@@ -8,9 +8,7 @@ var configs = require('./configs.js'),
   livereload = require('gulp-livereload'),
   marked = require('gulp-marked'),
   frontmatter = require('gulp-front-matter'),
-  lr = require('tiny-lr'),
-  path = require("path"),
-  server = lr();
+  path = require("path");
 
 gulp.task('connect', function(){
   connect.server({
@@ -31,25 +29,15 @@ gulp.task('handlebars', function () {
     .pipe(handlebars(templateData, options))
     .pipe(rename('index.html'))
     .pipe(gulp.dest('./build'))
-    .pipe(livereload(server));
+    .pipe(livereload());
 });
 
 gulp.task('watch', function() {
-  // Listen on port 35729
-  server.listen(35729, function (err) {
-    if (err) {
-      return console.error(err) 
-      //TODO use notify to log a message on Sass compile fail and Beep
-    };
+  //gulp.watch(path.join(paths.sass, '**/*.scss'), [task]);
  
-    //Watch task for sass
-    //gulp.watch(path.join(paths.sass, '**/*.scss'), [task]);
+  // watch task for template changes
+  gulp.watch(path.join('./dev/templates', '**/*.hbr'), ['handlebars']);
  
-    // watch task for gulp-includes
-    gulp.watch(path.join('./dev/templates', '**/*.hbr'), ['handlebars']);
- 
-  });
-
 });
 
 gulp.task('default', ['handlebars', 'connect', 'watch']);
