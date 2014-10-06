@@ -8,7 +8,10 @@ var configs = require('./configs.js'),
   livereload = require('gulp-livereload'),
   marked = require('gulp-marked'),
   frontmatter = require('gulp-front-matter'),
-  path = require("path");
+  notify = require('gulp-notify'),
+  ssg = require('gulp-ssg'),
+  path = require('path'),
+  es = require('event-stream');
 
 gulp.task('connect', function(){
   connect.server({
@@ -30,6 +33,36 @@ gulp.task('handlebars', function () {
     .pipe(rename('index.html'))
     .pipe(gulp.dest('./build'))
     .pipe(livereload());
+});
+
+gulp.task('html'), function() {
+  return gulp.src('./dev/**/*.md')
+    .pipe(frontmatter({
+      property: 'meta'
+    }))
+    .pipe(marked())
+    .pipe(ssg(site, {
+      property: 'meta'
+    }))
+    .pipe(es.map(function(file, cb) {
+      var html = handlebars.render(file.meta.layout, {
+        page: file.meta,
+        site: site,
+        content: String(file.contents)
+      });
+      file.contents = new Buffer(html);
+      cb(null, file);
+    }))
+    .pipe(gulp.dest('./build'));
+}
+
+gulp.task('markdown', function() {
+  gulp.src('./dev/**/*.md')
+    .pipe(frontmatter({
+      property: 'frontMatter', // property added to file object
+      remove: true // should we remove front-matter header?
+    }))
+    .pipe(notify());
 });
 
 gulp.task('watch', function() {
